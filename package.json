@@ -1,0 +1,14 @@
+{
+  "name": "soul-os-access-registration",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Access registration form for SOUL OS (SOUL Club, FST Tangier)",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "dev": "wrangler pages dev public"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.0"
+  }
+}

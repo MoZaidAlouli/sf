@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#020221">
+  <title>Access Registration | SOUL OS</title>
+  <link rel="icon" type="image/svg+xml" href="assets/soul-logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the form</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <img class="logo" src="assets/soul-logo.svg" alt="SOUL" width="48" height="48">
+      <div class="header-text">
+        <p class="brand">SOUL OS</p>
+        <p class="brand-sub">Access Registration</p>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="wrap">
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">Help us identify the people who need access to SOUL OS and understand their responsibilities within SOUL.</h1>
+      <p class="lead">This information will help the Digital Entity configure appropriate access permissions.</p>
+    </section>
+
+    <ol class="steps" id="steps" aria-label="Progress">
+      <li data-step-indicator="1"><span class="step-num">1</span><span class="step-label">Your details</span></li>
+      <li data-step-indicator="2"><span class="step-num">2</span><span class="step-label">People</span></li>
+      <li data-step-indicator="3"><span class="step-num">3</span><span class="step-label">Review</span></li>
+    </ol>
+
+    <p id="live" class="sr-only" role="status" aria-live="polite"></p>
+
+    <form id="form" novalidate autocomplete="off">
+      <div class="hp" aria-hidden="true">
+        <label>Leave this field empty <input type="text" name="website" id="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <!-- Step 1 -->
+      <section class="panel" data-step="1" aria-labelledby="h-step1">
+        <h2 id="h-step1" tabindex="-1">Your details</h2>
+        <p class="panel-note">The president of SOUL Club completes this form.</p>
+
+        <div class="field" data-field="president_name">
+          <label for="president_name">President's full name</label>
+          <input id="president_name" name="president_name" data-input="president_name" type="text" maxlength="120" autocomplete="name" required aria-describedby="president_name-err">
+          <p class="field-error" id="president_name-err" data-err="president_name" hidden></p>
+        </div>
+
+        <div class="field" data-field="president_email">
+          <label for="president_email">President's email address</label>
+          <input id="president_email" name="president_email" data-input="president_email" type="email" maxlength="254" autocomplete="email" inputmode="email" required aria-describedby="president_email-err">
+          <p class="field-error" id="president_email-err" data-err="president_email" hidden></p>
+        </div>
+
+        <div class="field">
+          <span class="label" id="date-label">Submission date</span>
+          <p class="static-value" id="submission-date" aria-labelledby="date-label"></p>
+          <p class="hint">Filled in automatically when you submit.</p>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary" id="to-step2">Continue</button>
+        </div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="panel" data-step="2" aria-labelledby="h-step2" hidden>
+        <h2 id="h-step2" tabindex="-1">People who need access</h2>
+        <p class="panel-note">Add everyone who should receive access. You can edit or remove anyone before you submit.</p>
+
+        <details class="levels">
+          <summary>What each access level means</summary>
+          <dl id="levels-list"></dl>
+        </details>
+
+        <div id="people"></div>
+
+        <button type="button" class="btn btn-secondary" id="add-person">Add another person</button>
+
+        <div class="actions actions-split">
+          <button type="button" class="btn btn-ghost" id="back-to-1">Back</button>
+          <button type="button" class="btn btn-primary" id="to-step3">Review submission</button>
+        </div>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="panel" data-step="3" aria-labelledby="h-step3" hidden>
+        <h2 id="h-step3" tabindex="-1">Review before you submit</h2>
+        <p class="panel-note">Check the details below. Nothing is saved until you select Submit registration.</p>
+
+        <div id="review"></div>
+
+        <div id="turnstile" class="turnstile"></div>
+
+        <p class="form-error" id="submit-error" role="alert" hidden></p>
+
+        <div class="actions actions-split">
+          <button type="button" class="btn btn-ghost" id="back-to-2">Edit people</button>
+          <button type="submit" class="btn btn-primary" id="submit-btn">Submit registration</button>
+        </div>
+      </section>
+    </form>
+
+    <!-- Confirmation -->
+    <section class="panel confirmation" id="confirmation" aria-labelledby="h-done" hidden>
+      <h2 id="h-done" tabindex="-1">Thank you.</h2>
+      <p>The SOUL OS access-registration information has been submitted successfully. The Digital Entity will review the information and configure access separately.</p>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p>SOUL Club, FST Tangier. This form does not create accounts or grant access.</p>
+  </footer>
+
+  <template id="person-tpl">
+    <fieldset class="person">
+      <legend class="person-title"><span class="person-label">Person</span></legend>
+
+      <div class="field" data-field="full_name">
+        <label data-for="full_name">Full name</label>
+        <input data-input="full_name" type="text" maxlength="120" required>
+        <p class="field-error" data-err="full_name" hidden></p>
+      </div>
+
+      <div class="field" data-field="role_title">
+        <label data-for="role_title">Current position or role in SOUL</label>
+        <input data-input="role_title" type="text" maxlength="120" required>
+        <p class="field-error" data-err="role_title" hidden></p>
+      </div>
+
+      <div class="field" data-field="entity">
+        <label data-for="entity">Entity or department</label>
+        <select data-input="entity" required></select>
+        <input data-input="entity_custom" type="text" maxlength="120" class="entity-custom" placeholder="Type the entity or department" aria-label="Custom entity or department" hidden>
+        <p class="field-error" data-err="entity" hidden></p>
+      </div>
+
+      <div class="field" data-field="responsibilities">
+        <label data-for="responsibilities">Main responsibilities</label>
+        <textarea data-input="responsibilities" rows="4" maxlength="2000" required></textarea>
+        <p class="hint">Describe what this person does in SOUL, at least a sentence.</p>
+        <p class="field-error" data-err="responsibilities" hidden></p>
+      </div>
+
+      <div class="field" data-field="access_level">
+        <label data-for="access_level">Suggested access level</label>
+        <select data-input="access_level" required></select>
+        <p class="hint level-desc" data-desc="access_level"></p>
+        <p class="field-error" data-err="access_level" hidden></p>
+      </div>
+
+      <div class="field" data-field="email">
+        <label data-for="email">Email address <span class="optional">(optional)</span></label>
+        <input data-input="email" type="email" maxlength="254" inputmode="email">
+        <p class="field-error" data-err="email" hidden></p>
+      </div>
+
+      <div class="field" data-field="notes">
+        <label data-for="notes">Additional notes <span class="optional">(optional)</span></label>
+        <textarea data-input="notes" rows="2" maxlength="1000"></textarea>
+        <p class="field-error" data-err="notes" hidden></p>
+      </div>
+
+      <button type="button" class="btn btn-remove" data-action="remove">Remove this person</button>
+    </fieldset>
+  </template>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
