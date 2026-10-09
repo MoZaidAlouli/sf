@@ -65,10 +65,6 @@
   let submitting = false;
   let submitted = false;
   let idemKey = null;
-  let turnstileToken = '';
-  let turnstileWidget = null;
-  let turnstileOn = false;
-
   const announce = (msg) => {
     live.textContent = '';
     live.textContent = msg;
@@ -495,7 +491,7 @@
         };
       }),
       website: $('#website').value,
-      turnstile_token: turnstileToken || undefined,
+    
     };
   }
 
@@ -507,10 +503,7 @@
     if (!validateStep1()) return showStep(1);
     if (!validateStep2()) return showStep(2);
     if (step !== 3) return showStep(3);
-    if (turnstileOn && !turnstileToken) {
-      showSubmitError('Complete the verification check above, then submit again.');
-      return;
-    }
+
 
     submitError.hidden = true;
     setBusy(true);
@@ -519,9 +512,12 @@
     const timer = setTimeout(() => controller.abort(), SUBMIT_TIMEOUT_MS);
     let ok = false;
     try {
-      const res = await fetch('/api/submit', {
+      const res = await fetch('https://xyvsldnctnyjhrjrjdbo.supabase.co/functions/v1/submit-registration', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+  'Content-Type': 'application/json',
+  'apikey': 'sb_publishable_CPvi5w6SrXOsL8oQ1Q5v-w_iPhn7nhc',
+},
         body: JSON.stringify(buildPayload()),
         signal: controller.signal,
       });
@@ -535,7 +531,7 @@
         ok = true;
       } else {
         showSubmitError(data.error || 'Something went wrong while saving. Your answers are still here, so you can try again.');
-        if (data.code === 'verification_failed' || data.code === 'rate_limited') resetTurnstile();
+        
       }
     } catch (err) {
       showSubmitError(
@@ -549,7 +545,7 @@
 
     if (ok) return finish();
     setBusy(false);
-    resetTurnstile();
+    
   });
 
   function finish() {
@@ -566,47 +562,6 @@
     if (confirmation.scrollIntoView) confirmation.scrollIntoView({ block: 'start' });
     announce('Submission received.');
   }
-
-  // ---- Turnstile (optional) --------------------------------------------------
-  function resetTurnstile() {
-    turnstileToken = '';
-    if (turnstileOn && window.turnstile && turnstileWidget !== null) window.turnstile.reset(turnstileWidget);
-  }
-
-  function loadTurnstile(siteKey) {
-    turnstileOn = true;
-    window.onTurnstileLoad = () => {
-      turnstileWidget = window.turnstile.render('#turnstile', {
-        sitekey: siteKey,
-        callback: (t) => {
-          turnstileToken = t;
-        },
-        'expired-callback': () => {
-          turnstileToken = '';
-        },
-        'error-callback': () => {
-          turnstileToken = '';
-        },
-      });
-    };
-    const s = document.createElement('script');
-    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onTurnstileLoad';
-    s.async = true;
-    s.defer = true;
-    document.head.append(s);
-  }
-
-  async function loadConfig() {
-    try {
-      const res = await fetch('/api/config');
-      if (!res.ok) return;
-      const cfg = await res.json();
-      if (cfg && cfg.turnstileSiteKey) loadTurnstile(cfg.turnstileSiteKey);
-    } catch {
-      /* The server enforces verification if it is configured. */
-    }
-  }
-
   // ---- Init ------------------------------------------------------------------
   $('#submission-date').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -630,7 +585,6 @@
     }
   });
 
-  addPerson(false);
+    addPerson(false);
   showStep(1, false);
-  loadConfig();
 })();
